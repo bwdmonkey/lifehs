@@ -37,4 +37,4 @@ simulate board = do
     simulate (nextGeneration board)
 
 -- Temporary simulation
-main = simulate [(5,1), (5,2), (5,3), (6,3), (1,5), (2,5), (3,5), (3,6), (6,5),(7,5), (5,6), (5,7), (6,7), (7, 6)]
+main = simulate [(1,2), (1,1), (2,2)]
