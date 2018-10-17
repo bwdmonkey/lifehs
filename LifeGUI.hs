@@ -1,10 +1,9 @@
 import Control.Concurrent
+import Text.Regex.Posix
 
+import Constants
 import Life
-
--- Default width and height (Must be same as the ones in Life.hs)
-width, height :: Integer
-(width, height) = (20, 20)
+import LifeHelper
 
 -- Custom type declarations
 type Alive = Bool
@@ -31,7 +30,7 @@ simulate :: AliveBoard -> IO a
 simulate board = do
     clearScreen
     printBoard (generateBoard board)
-    putStrLn "Press ^c in order to finish"
+    putStrLn "Press ^C in order to finish"
     threadDelay 500000                   -- Sleep for 0.5 second
     simulate (nextGeneration board)
 
@@ -45,9 +44,9 @@ startScreen = do
   putStrLn "2) Use seeds"
   input <- getLineWithFilter (\x -> x == "1" || x == "2") "Invalid option. Please choose from the options"
   case input of
-    "1" -> simulate [(1,2), (1,1), (2,2)] -- TODO: Implement custom plot picker #4
+    "1" -> do plots <- customPlots; simulate plots
     "2" -> putStrLn ("TODO: Implement seed picker #3")
-    _ -> putStrLn ("Something went wrong.")
+    _ -> putStrLn ("Something went wrong. Please restart the program.")
 
 -- clearScreen clears the screen and sets the cursor to home using ANSI
 clearScreen :: IO ()
@@ -55,16 +54,36 @@ clearScreen = do
     putStr "\ESC[2J"                     -- ANSI escape sequence to clear screen
     putStr "\ESC[H"                      -- ANSI escape sequence to go to home
 
--- getLineWithFilter gets IO input with filter until the conditions are met
-getLineWithFilter :: (String -> Bool) -> String -> IO String
-getLineWithFilter cond err = do
-  putStr ("> ")
-  input <- getLine
-  if cond input then do
-    return input
+-- customPlots prints the custom plot screen and asks for custom positions
+customPlots = do
+  putStrLn "Please provide a cell position you like to add in format of x, y"
+  putStrLn "or \"quit\" to quit:"
+  plots <- getPositions []
+  return plots
+
+-- getPositions asks for valid positions until user types "quit"
+getPositions :: [Position] -> IO [Position]
+getPositions lst = do
+  input <- getLineWithFilter isPositionFormatOrQuit "Invalid format. Please input in the format of x,y or type \"quit\" to quit."
+  if input == "quit" then do
+    return lst
   else do
-    putStrLn (err)
-    return (getLineWithFilter cond err)()
+    let position = translateToPosition input
+    return (getPositions (lst ++ [position]))()
+
+-- translateToPosition translates a string format of "1,1" into a Position of (1,1)
+translateToPosition :: String -> Position
+translateToPosition str = arrayToPosition (split ',' str)
+    where
+      arrayToPosition :: [String] -> Position
+      arrayToPosition (a:b:r) = (read a, read b)
+
+-- isPositionFormatOrQuit returns True if the string is true or in the format of "Num,Num"
+isPositionFormatOrQuit :: String -> Bool
+isPositionFormatOrQuit str
+    | str == "quit" = True
+    | isPresent (getAllTextMatches $ str =~ "^[1-9][0-9]*,[1-9][0-9]*$" :: [String]) = True
+    | otherwise = False
 
 -- main
 main :: IO ()

@@ -1,8 +1,6 @@
 module Life (AliveBoard, Position, nextGeneration) where
 
--- Default width and height
-width, height :: Integer
-(width, height) = (20, 20)
+import Constants
 
 -- Custom type declarations
 type Position = (Integer, Integer)
