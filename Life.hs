@@ -23,7 +23,7 @@ wrap (x, y) = (((x - 1) `mod`  width) + 1,
 neighbors :: Position -> [Position]
 neighbors (x, y) = map wrap [(x - 1, y - 1), (x, y - 1), (x + 1, y - 1),
                              (x - 1, y    ),             (x + 1, y    ),
-                             (x + 1, y + 1), (x, y + 1), (x + 1, y + 1)]
+                             (x - 1, y + 1), (x, y + 1), (x + 1, y + 1)]
 
 -- liveNeighborCount (x, y) returns the number of alive neighbors
 liveNeighborCount :: AliveBoard -> Position -> Integer
