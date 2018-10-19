@@ -27,13 +27,16 @@ printBoard :: Board -> IO ()
 printBoard = mapM_ printCell
 
 -- simulate board prints the full board given alive board and runs the game tick
-simulate :: AliveBoard -> IO a
+simulate :: AliveBoard -> IO ()
 simulate board = do
     clearScreen
     printBoard (generateBoard board)
-    putStrLn "Press ^C in order to finish"
-    threadDelay 400000                   -- Sleep for 0.4 second
-    simulate (nextGeneration board)
+    if stuckBoard board then
+      putStrLn "Game Over!"
+    else do
+      putStrLn "Press ^C in order to finish"
+      threadDelay 400000                   -- Sleep for 0.4 second
+      simulate (nextGeneration board)
 
 -- startScreen prints the start screen for the game
 startScreen :: IO ()
