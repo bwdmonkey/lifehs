@@ -4,6 +4,7 @@ import Text.Regex.Posix
 import Constants
 import Life
 import LifeHelper
+import Seed
 
 -- Custom type declarations
 type Alive = Bool
@@ -45,7 +46,7 @@ startScreen = do
   input <- getLineWithFilter (\x -> x == "1" || x == "2") "Invalid option. Please choose from the options"
   case input of
     "1" -> do plots <- customPlots; simulate plots
-    "2" -> putStrLn ("TODO: Implement seed picker #3")
+    "2" -> do plots <- seedPlots; simulate plots
     _ -> putStrLn ("Something went wrong. Please restart the program.")
 
 -- clearScreen clears the screen and sets the cursor to home using ANSI
