@@ -1,6 +1,9 @@
 module Seed (separate, readPlot, readSeed, seedPlots) where
 
+import Data.List
+import Constants
 import Life
+import LifeHelper
 
 -- separate (==',') "3,5,"  => ["3","5",""]
 separate :: (a -> Bool) -> [a] -> [[a]]
@@ -29,6 +32,6 @@ readSeed filename =
 seedPlots :: IO AliveBoard
 seedPlots = do
     putStrLn "Greetings. Which of the following seeds would you like to use?"
-    putStrLn "BeaconSeed, BlinkerSeed, DieHardSeed, GliderSeed, LWSSSeed, RandomSeed, ToadSeed"
-    file <- getLine
-    (readSeed ("./seeds/" ++ file ++ ".txt"))
+    putStrLn (intercalate ", " presetSeeds)
+    input <- getLineWithFilter (\x -> elem x presetSeeds) "Please select from the options."
+    (readSeed ("./seeds/" ++ input ++ ".txt"))
