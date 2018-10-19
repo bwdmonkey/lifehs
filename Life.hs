@@ -14,16 +14,11 @@ isAlive board position = elem position board
 isEmpty :: AliveBoard -> Position -> Bool
 isEmpty board position = not (isAlive board position)
 
--- wrap (x, y) returns a new position wrapped around maximum height and width
-wrap :: Position -> Position
-wrap (x, y) = (((x - 1) `mod`  width) + 1,
-               ((y - 1) `mod` height) + 1)
-
 -- neighbors (x, y) returns all neighbors around position after wrap
 neighbors :: Position -> [Position]
-neighbors (x, y) = map wrap [(x - 1, y - 1), (x, y - 1), (x + 1, y - 1),
-                             (x - 1, y    ),             (x + 1, y    ),
-                             (x - 1, y + 1), (x, y + 1), (x + 1, y + 1)]
+neighbors (x, y) = [(x - 1, y - 1), (x, y - 1), (x + 1, y - 1),
+                    (x - 1, y    ),             (x + 1, y    ),
+                    (x - 1, y + 1), (x, y + 1), (x + 1, y + 1)]
 
 -- liveNeighborCount (x, y) returns the number of alive neighbors
 liveNeighborCount :: AliveBoard -> Position -> Integer

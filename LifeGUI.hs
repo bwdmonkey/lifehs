@@ -32,7 +32,7 @@ simulate board = do
     clearScreen
     printBoard (generateBoard board)
     putStrLn "Press ^C in order to finish"
-    threadDelay 500000                   -- Sleep for 0.5 second
+    threadDelay 400000                   -- Sleep for 0.4 second
     simulate (nextGeneration board)
 
 -- startScreen prints the start screen for the game
@@ -57,7 +57,7 @@ clearScreen = do
 
 -- customPlots prints the custom plot screen and asks for custom positions
 customPlots = do
-  putStrLn "Please provide a cell position you like to add in format of x, y"
+  putStrLn "Please provide a cell position you like to add in format of x, y (1-index)"
   putStrLn "or \"quit\" to quit:"
   plots <- getPositions []
   return plots
@@ -65,7 +65,7 @@ customPlots = do
 -- getPositions asks for valid positions until user types "quit"
 getPositions :: [Position] -> IO [Position]
 getPositions lst = do
-  input <- getLineWithFilter isPositionFormatOrQuit "Invalid format. Please input in the format of x,y or type \"quit\" to quit."
+  input <- getLineWithFilter isPositionFormatOrQuit "Invalid format. Please input in the format of x,y (1-index) or type \"quit\" to quit."
   if input == "quit" then do
     return lst
   else do

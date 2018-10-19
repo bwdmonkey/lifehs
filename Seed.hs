@@ -1,10 +1,9 @@
 module Seed (separate, readPlot, readSeed, seedPlots) where
+
 import Life
 
--- Take a plot and return the seeds
--- file => [(a,b), (c,d)]
-
 -- separate (==',') "3,5,"  => ["3","5",""]
+separate :: (a -> Bool) -> [a] -> [[a]]
 separate sep [] = [[]]
 separate sep (h:t)
     | sep h = []: separate sep t
@@ -12,6 +11,7 @@ separate sep (h:t)
                 where w:rest = separate sep t
 
 -- readPlot "plot3.txt" => [["0","1","0"],["1","0","1"],["0","1","0"]]
+readPlot :: FilePath -> IO [[String]]
 readPlot filename =
     do
         file <- readFile filename
@@ -28,7 +28,7 @@ readSeed filename =
 
 seedPlots :: IO AliveBoard
 seedPlots = do
-    putStrLn "Greetings. Which of the following plots would you like to use?"
+    putStrLn "Greetings. Which of the following seeds would you like to use?"
     putStrLn "BeaconSeed, BlinkerSeed, DieHardSeed, GliderSeed, LWSSSeed, RandomSeed, ToadSeed"
     file <- getLine
     (readSeed ("./seeds/" ++ file ++ ".txt"))
